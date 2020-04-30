@@ -1,0 +1,131 @@
+#include <iostream> 
+#include <string>
+#include <conio.h>
+using namespace std;
+
+class Human
+{
+private:
+	int* age = new int;
+	string name;
+	string health;
+
+public:
+	virtual void work() = 0;
+	Human()
+	{
+		cout << "Enter name" << endl;
+		cin >> name;
+		cout << "Enter age" << endl;
+		cin >> *age;
+		bool Correct = true;
+		while(Correct)
+		{
+			cout << "How is your health: Good or Bad?" << endl;
+			cin >> health;
+			if (!(health == "Good" || health == "Bad")) { Correct = true; }
+			else { Correct = false; }
+		}
+		
+	}
+	virtual ~Human() {delete age; }
+	Human(const Human &other)
+	{
+		this->age = new int;
+		this->health = other.health;
+		this->age = other.age;
+		this->name = other.name;
+	}
+	void operator= (const Human &other)
+	{
+		this->health = other.health;
+		this->age = other.age;
+		this->name = other.name;
+	}
+
+	virtual void HealYourself() { cout << "Try to heal yourself" << endl << "Fail" << endl; }
+	virtual void ToDiagnose() { cout << "Try to set diagnosis" << endl << "Fail" << endl; }
+
+	void SetAge(int* age) { this->age = age; }
+	void SetName(string name) { this->name = name; }
+	void SetHealth(string health) { this->health = health; }
+
+	int* GetAge() { return age; }
+	string GetName() { return name; }
+	string GetHealth() { return health; }
+};
+
+class Doctor :public Human
+{
+private:
+	bool IsAGoodDoctor;
+	string spec; // spec = specialization
+	int* exp = new int;   // exp = experience
+public:
+	void work() { cout << "Healing peoples" << endl; }
+
+	Doctor()
+	{
+		string YesNo;
+		cout << "Which doctor you are?" << endl;
+		cin >> spec;
+		cout << "You are good doctor?(Yes/No)" << endl;
+		while(true)
+		{
+			cin >> YesNo;
+			if (YesNo == "Yes" || YesNo == "No") { if (YesNo == "Yes") { IsAGoodDoctor = true; break; } else { IsAGoodDoctor = false; break; } }
+			else { cout << "Yes or No" << endl; }
+		}
+		cout << "How long you work?" << endl;
+		cin >> *exp;
+	}
+	~Doctor() { delete exp; }
+	Doctor(const Doctor& other)
+	{
+		this->exp = new int;
+		this->exp = other.exp;
+		this->spec = other.spec;
+		this->IsAGoodDoctor = other.IsAGoodDoctor;
+	}
+	void HealYourself() override
+	{
+		if (GetHealth() == "Good") { cout << "i am in good health. I dont need it." << endl; }
+		else
+		{
+			cout << "Try to heal yourself" << endl;
+			if (IsAGoodDoctor == true) { cout << "Succsess" << endl; }
+			else { cout << "Fail" << endl; }
+		}
+		
+	}
+	void ToDiagnose() override { cout << "Try to set diagnosis" << endl << "Succsess" << endl; }
+
+
+	void SetIsAGoodDoctor(bool IsAGoodDoctor) { this->IsAGoodDoctor = IsAGoodDoctor; }
+	void SerSpec(string spec) { this->spec = spec; }
+	void SetExp(int* exp) { this->exp = exp; }
+
+	bool GetIsAGoodDoctor() { return IsAGoodDoctor; }
+	string GetSpec() { return spec; }
+	int* GetExp() { return exp; }
+
+
+};
+
+int main()
+{
+	
+	Doctor i;
+	cout << "Age - " << *i.GetAge() << endl << "Name - " << i.GetName() << endl << "Health - " << i.GetHealth() << endl;
+	cout << "Good doctor - " << i.GetIsAGoodDoctor() << endl << "Specialization - " << i.GetSpec() << endl << "Experience - " << *i.GetExp() << endl << endl;
+
+	i.ToDiagnose();
+	i.HealYourself();
+
+	_getch();
+	return 0;
+	
+}
+
+
+
